@@ -69,7 +69,8 @@ class EditorToolbar {
       }% + var(--editor-toolbar-vert-offset))`;
     }
 
-    this.#addDeleteButton();
+    // @Colab Removing delete button from toolbar
+    // this.#addDeleteButton();
 
     return editToolbar;
   }
@@ -118,23 +119,24 @@ class EditorToolbar {
     this.#altText?.shown();
   }
 
-  #addDeleteButton() {
-    const { editorType, _uiManager } = this.#editor;
-
-    const button = document.createElement("button");
-    button.className = "delete";
-    button.tabIndex = 0;
-    button.setAttribute("data-l10n-id", EditorToolbar.#l10nRemove[editorType]);
-    this.#addListenersToElement(button);
-    button.addEventListener(
-      "click",
-      e => {
-        _uiManager.delete();
-      },
-      { signal: _uiManager._signal }
-    );
-    this.#buttons.append(button);
-  }
+  // @Colab Not used anymore
+  // #addDeleteButton() {
+  //   const { editorType, _uiManager } = this.#editor;
+  //
+  //   const button = document.createElement("button");
+  //   button.className = "delete";
+  //   button.tabIndex = 0;
+  //   button.setAttribute("data-l10n-id", EditorToolbar.#l10nRemove[editorType]);
+  //   this.#addListenersToElement(button);
+  //   button.addEventListener(
+  //     "click",
+  //     e => {
+  //       _uiManager.delete();
+  //     },
+  //     { signal: _uiManager._signal }
+  //   );
+  //   this.#buttons.append(button);
+  // }
 
   get #divider() {
     const divider = document.createElement("div");
@@ -153,7 +155,9 @@ class EditorToolbar {
     this.#colorPicker = colorPicker;
     const button = colorPicker.renderButton();
     this.#addListenersToElement(button);
-    this.#buttons.prepend(button, this.#divider);
+    // @collab Divider removed since there is no delete button anymore
+    // this.#buttons.prepend(button, this.#divider);
+    this.#buttons.prepend(button);
   }
 
   async addEditSignatureButton(signatureManager) {

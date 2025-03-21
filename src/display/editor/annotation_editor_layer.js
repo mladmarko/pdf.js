@@ -173,7 +173,9 @@ class AnnotationEditorLayer {
         this.enableClick();
         break;
       case AnnotationEditorType.HIGHLIGHT:
-        this.enableTextSelection();
+        // @Collab disable text selection and toggle annotation pointer events
+        // this.enableTextSelection();
+        this.disableTextSelection();
         this.togglePointerEvents(false);
         this.disableClick();
         break;
@@ -356,20 +358,21 @@ class AnnotationEditorLayer {
     this.#uiManager.setActiveEditor(editor);
   }
 
-  enableTextSelection() {
-    this.div.tabIndex = -1;
-    if (this.#textLayer?.div && !this.#textSelectionAC) {
-      this.#textSelectionAC = new AbortController();
-      const signal = this.#uiManager.combinedSignal(this.#textSelectionAC);
-
-      this.#textLayer.div.addEventListener(
-        "pointerdown",
-        this.#textLayerPointerDown.bind(this),
-        { signal }
-      );
-      this.#textLayer.div.classList.add("highlighting");
-    }
-  }
+  // @Collab not used anymore, disabling highlight drawings
+  // enableTextSelection() {
+  //   this.div.tabIndex = -1;
+  //   if (this.#textLayer?.div && !this.#textSelectionAC) {
+  //     this.#textSelectionAC = new AbortController();
+  //     const signal = this.#uiManager.combinedSignal(this.#textSelectionAC);
+  //
+  //     this.#textLayer.div.addEventListener(
+  //       "pointerdown",
+  //       this.#textLayerPointerDown.bind(this),
+  //       { signal }
+  //     );
+  //     this.#textLayer.div.classList.add("highlighting");
+  //   }
+  // }
 
   disableTextSelection() {
     this.div.tabIndex = 0;
@@ -381,45 +384,46 @@ class AnnotationEditorLayer {
     }
   }
 
-  #textLayerPointerDown(event) {
-    // Unselect all the editors in order to let the user select some text
-    // without being annoyed by an editor toolbar.
-    this.#uiManager.unselectAll();
-    const { target } = event;
-    if (
-      target === this.#textLayer.div ||
-      ((target.getAttribute("role") === "img" ||
-        target.classList.contains("endOfContent")) &&
-        this.#textLayer.div.contains(target))
-    ) {
-      const { isMac } = FeatureTest.platform;
-      if (event.button !== 0 || (event.ctrlKey && isMac)) {
-        // Do nothing on right click.
-        return;
-      }
-      this.#uiManager.showAllEditors(
-        "highlight",
-        true,
-        /* updateButton = */ true
-      );
-      this.#textLayer.div.classList.add("free");
-      this.toggleDrawing();
-      HighlightEditor.startHighlighting(
-        this,
-        this.#uiManager.direction === "ltr",
-        { target: this.#textLayer.div, x: event.x, y: event.y }
-      );
-      this.#textLayer.div.addEventListener(
-        "pointerup",
-        () => {
-          this.#textLayer.div.classList.remove("free");
-          this.toggleDrawing(true);
-        },
-        { once: true, signal: this.#uiManager._signal }
-      );
-      event.preventDefault();
-    }
-  }
+  // @Collab not used anymore, disabling highlight drawings
+  // #textLayerPointerDown(event) {
+  //   // Unselect all the editors in order to let the user select some text
+  //   // without being annoyed by an editor toolbar.
+  //   this.#uiManager.unselectAll();
+  //   const { target } = event;
+  //   if (
+  //     target === this.#textLayer.div ||
+  //     ((target.getAttribute("role") === "img" ||
+  //       target.classList.contains("endOfContent")) &&
+  //       this.#textLayer.div.contains(target))
+  //   ) {
+  //     const { isMac } = FeatureTest.platform;
+  //     if (event.button !== 0 || (event.ctrlKey && isMac)) {
+  //       // Do nothing on right click.
+  //       return;
+  //     }
+  //     this.#uiManager.showAllEditors(
+  //       "highlight",
+  //       true,
+  //       /* updateButton = */ true
+  //     );
+  //     this.#textLayer.div.classList.add("free");
+  //     this.toggleDrawing();
+  //     HighlightEditor.startHighlighting(
+  //       this,
+  //       this.#uiManager.direction === "ltr",
+  //       { target: this.#textLayer.div, x: event.x, y: event.y }
+  //     );
+  //     this.#textLayer.div.addEventListener(
+  //       "pointerup",
+  //       () => {
+  //         this.#textLayer.div.classList.remove("free");
+  //         this.toggleDrawing(true);
+  //       },
+  //       { once: true, signal: this.#uiManager._signal }
+  //     );
+  //     event.preventDefault();
+  //   }
+  // }
 
   enableClick() {
     if (this.#clickAC) {
@@ -783,9 +787,11 @@ class AnnotationEditorLayer {
    * @param {PointerEvent} event
    */
   pointerdown(event) {
-    if (this.#uiManager.getMode() === AnnotationEditorType.HIGHLIGHT) {
-      this.enableTextSelection();
-    }
+    // @Collab not used anymore, disabling highlight drawings
+    // if (this.#uiManager.getMode() === AnnotationEditorType.HIGHLIGHT) {
+    //   this.enableTextSelection();
+    // }
+
     if (this.#hadPointerDown) {
       // It's possible to have a second pointerdown event before a pointerup one
       // when the user puts a finger on a touchscreen and then add a second one
@@ -807,10 +813,11 @@ class AnnotationEditorLayer {
 
     this.#hadPointerDown = true;
 
-    if (this.#currentEditorType?.isDrawer) {
-      this.startDrawingSession(event);
-      return;
-    }
+    // @Collab not used anymore, disabling highlight drawings
+    // if (this.#currentEditorType?.isDrawer) {
+    //   this.startDrawingSession(event);
+    //   return;
+    // }
 
     const editor = this.#uiManager.getActive();
     this.#allowClick = !editor || editor.isEmpty();

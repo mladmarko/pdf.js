@@ -154,6 +154,8 @@ class ColorPicker {
       source: this,
       type: this.#type,
       value: color,
+      //@Collab added to find the snippet that is changing color
+      editor: this.#editor,
     });
   }
 

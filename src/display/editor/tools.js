@@ -849,7 +849,8 @@ class AnnotationEditorUIManager {
       evt => this.updateParams(evt.type, evt.value),
       { signal }
     );
-    this.#addSelectionListener();
+    // @Collab disable text selection handler
+    // this.#addSelectionListener();
     this.#addDragAndDropListeners();
     this.#addKeyboardManager();
     this.#annotationStorage = pdfDocument.annotationStorage;
@@ -1106,7 +1107,9 @@ class AnnotationEditorUIManager {
     return null;
   }
 
-  highlightSelection(methodOfCreation = "") {
+
+  // @Collab color parameter added so we can create a new highlighter with a specific color, returning editor after creation
+  highlightSelection(methodOfCreation = "", color = "#FFFF98") {
     const selection = document.getSelection();
     if (!selection || selection.isCollapsed) {
       return;
@@ -1124,7 +1127,7 @@ class AnnotationEditorUIManager {
     const layer = this.#getLayerForTextLayer(textLayer);
     const isNoneMode = this.#mode === AnnotationEditorType.NONE;
     const callback = () => {
-      layer?.createAndAddNewEditor({ x: 0, y: 0 }, false, {
+      const editor = layer?.createAndAddNewEditor({ x: 0, y: 0 }, false, {
         methodOfCreation,
         boxes,
         anchorNode,
@@ -1132,16 +1135,20 @@ class AnnotationEditorUIManager {
         focusNode,
         focusOffset,
         text,
+        color,
       });
       if (isNoneMode) {
         this.showAllEditors("highlight", true, /* updateButton = */ true);
       }
+
+      return editor;
     };
     if (isNoneMode) {
       this.switchToMode(AnnotationEditorType.HIGHLIGHT, callback);
       return;
     }
-    callback();
+
+    return callback();
   }
 
   #displayHighlightToolbar() {
@@ -1255,13 +1262,14 @@ class AnnotationEditorUIManager {
     }
   }
 
-  #addSelectionListener() {
-    document.addEventListener(
-      "selectionchange",
-      this.#selectionChange.bind(this),
-      { signal: this._signal }
-    );
-  }
+  // @Collab not used anymore
+  // #addSelectionListener() {
+  //   document.addEventListener(
+  //     "selectionchange",
+  //     this.#selectionChange.bind(this),
+  //     { signal: this._signal }
+  //   );
+  // }
 
   #addFocusManager() {
     if (this.#focusManagerAC) {
