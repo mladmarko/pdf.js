@@ -1832,10 +1832,10 @@ class AnnotationEditor {
   /**
    * Select this editor.
    */
-  select() {
+  select(showHighlightToolbar = true) {
     this.makeResizable();
     this.div?.classList.add("selectedEditor");
-    if (!this._editToolbar) {
+    if (!this._editToolbar && showHighlightToolbar) {
       this.addEditToolbar().then(() => {
         if (this.div?.classList.contains("selectedEditor")) {
           // The editor can have been unselected while we were waiting for the

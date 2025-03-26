@@ -444,7 +444,9 @@ class HighlightEditor extends AnnotationEditor {
     if (!this.annotationElementId) {
       this.parent.addUndoableEditor(this);
     }
-    if (focus) {
+
+    // @Collab added autoFocus control on highlight creation
+    if (focus && this.parent.autoFocusHighlight) {
       this.div.focus();
     }
   }
@@ -684,8 +686,8 @@ class HighlightEditor extends AnnotationEditor {
   }
 
   /** @inheritdoc */
-  select() {
-    super.select();
+  select(showHighlightToolbar = true) {
+    super.select(showHighlightToolbar);
     if (!this.#outlineId) {
       return;
     }
@@ -769,7 +771,7 @@ class HighlightEditor extends AnnotationEditor {
     return this.#highlightOutlines.serialize(rect, this.#getRotation());
   }
 
-  // @Collab free hand highlighting, not neeeded anymore
+  // @Collab free hand highlighting, not needed anymore
   // static startHighlighting(parent, isLTR, { target: textLayer, x, y }) {
   //   const {
   //     x: layerX,

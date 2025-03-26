@@ -85,6 +85,9 @@ class AnnotationEditorLayer {
 
   #textSelectionAC = null;
 
+  // @Collab adding autofocus control
+  #autoFocusHighlight = true;
+
   #uiManager;
 
   static _initialized = false;
@@ -230,6 +233,10 @@ class AnnotationEditorLayer {
 
   toggleAnnotationLayerPointerEvents(enabled = false) {
     this.#annotationLayer?.div.classList.toggle("disabled", !enabled);
+  }
+
+  setAutoFocusHighlights(autoFocusHighlight) {
+    this.#autoFocusHighlight = autoFocusHighlight;
   }
 
   /**

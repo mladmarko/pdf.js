@@ -69,7 +69,7 @@ class EditorToolbar {
       }% + var(--editor-toolbar-vert-offset))`;
     }
 
-    // @Colab Removing delete button from toolbar
+    // @Collab Removing delete button from toolbar
     // this.#addDeleteButton();
 
     return editToolbar;
@@ -119,7 +119,7 @@ class EditorToolbar {
     this.#altText?.shown();
   }
 
-  // @Colab Not used anymore
+  // @Collab Not used anymore
   // #addDeleteButton() {
   //   const { editorType, _uiManager } = this.#editor;
   //

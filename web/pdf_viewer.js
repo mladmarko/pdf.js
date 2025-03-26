@@ -138,6 +138,8 @@ function isValidAnnotationEditorMode(mode) {
  *   The default value is `true`.
  * @property {boolean} [enableAutoLinking] - Enable creation of hyperlinks from
  *   text that look like URLs. The default value is `false`.
+ * @property {boolean} [showHighlightToolbar] - When enabled highlight toolbar will
+ * show up. The default value is `true`
  */
 
 class PDFPageViewBuffer {
@@ -270,6 +272,8 @@ class PDFViewer {
 
   #textLayerMode = TextLayerMode.ENABLE;
 
+  #showHighlightToolbar = null;
+
   /**
    * @param {PDFViewerOptions} options
    */
@@ -305,7 +309,7 @@ class PDFViewer {
     this.#altTextManager = options.altTextManager || null;
     this.#signatureManager = options.signatureManager || null;
     this.#editorUndoBar = options.editorUndoBar || null;
-
+    this.#showHighlightToolbar = options.showHighlightToolbar === true;
     if (this.findController) {
       this.findController.onIsPageVisible = pageNumber =>
         this._getVisiblePages().ids.has(pageNumber);
@@ -938,7 +942,8 @@ class PDFViewer {
               this.#enableNewAltTextWhenAddingImage,
               this.#mlManager,
               this.#editorUndoBar,
-              this.#supportsPinchToZoom
+              this.#supportsPinchToZoom,
+              this.#showHighlightToolbar
             );
             eventBus.dispatch("annotationeditoruimanager", {
               source: this,
