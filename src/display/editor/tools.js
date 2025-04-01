@@ -1105,7 +1105,7 @@ class AnnotationEditorUIManager {
 
   #getLayerForTextLayer(textLayer) {
     const { currentLayer } = this;
-    if (currentLayer.hasTextLayer(textLayer)) {
+    if (currentLayer?.hasTextLayer(textLayer)) {
       return currentLayer;
     }
     for (const layer of this.#allLayers.values()) {
