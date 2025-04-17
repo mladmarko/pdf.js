@@ -1456,61 +1456,61 @@ class AnnotationEditorUIManager {
    * @param {ClipboardEvent} event
    */
   async paste(event) {
-    event.preventDefault();
-    const { clipboardData } = event;
-    for (const item of clipboardData.items) {
-      for (const editorType of this.#editorTypes) {
-        if (editorType.isHandlingMimeForPasting(item.type)) {
-          editorType.paste(item, this.currentLayer);
-          return;
-        }
-      }
-    }
-
-    let data = clipboardData.getData("application/pdfjs");
-    if (!data) {
-      return;
-    }
-
-    try {
-      data = JSON.parse(data);
-    } catch (ex) {
-      warn(`paste: "${ex.message}".`);
-      return;
-    }
-
-    if (!Array.isArray(data)) {
-      return;
-    }
-
-    this.unselectAll();
-    const layer = this.currentLayer;
-
-    try {
-      const newEditors = [];
-      for (const editor of data) {
-        const deserializedEditor = await layer.deserialize(editor);
-        if (!deserializedEditor) {
-          return;
-        }
-        newEditors.push(deserializedEditor);
-      }
-
-      const cmd = () => {
-        for (const editor of newEditors) {
-          this.#addEditorToLayer(editor);
-        }
-        this.#selectEditors(newEditors);
-      };
-      const undo = () => {
-        for (const editor of newEditors) {
-          editor.remove();
-        }
-      };
-      this.addCommands({ cmd, undo, mustExec: true });
-    } catch (ex) {
-      warn(`paste: "${ex.message}".`);
-    }
+    // event.preventDefault();
+    // const { clipboardData } = event;
+    // for (const item of clipboardData.items) {
+    //   for (const editorType of this.#editorTypes) {
+    //     if (editorType.isHandlingMimeForPasting(item.type)) {
+    //       editorType.paste(item, this.currentLayer);
+    //       return;
+    //     }
+    //   }
+    // }
+    //
+    // let data = clipboardData.getData("application/pdfjs");
+    // if (!data) {
+    //   return;
+    // }
+    //
+    // try {
+    //   data = JSON.parse(data);
+    // } catch (ex) {
+    //   warn(`paste: "${ex.message}".`);
+    //   return;
+    // }
+    //
+    // if (!Array.isArray(data)) {
+    //   return;
+    // }
+    //
+    // this.unselectAll();
+    // const layer = this.currentLayer;
+    //
+    // try {
+    //   const newEditors = [];
+    //   for (const editor of data) {
+    //     const deserializedEditor = await layer.deserialize(editor);
+    //     if (!deserializedEditor) {
+    //       return;
+    //     }
+    //     newEditors.push(deserializedEditor);
+    //   }
+    //
+    //   const cmd = () => {
+    //     for (const editor of newEditors) {
+    //       this.#addEditorToLayer(editor);
+    //     }
+    //     this.#selectEditors(newEditors);
+    //   };
+    //   const undo = () => {
+    //     for (const editor of newEditors) {
+    //       editor.remove();
+    //     }
+    //   };
+    //   this.addCommands({ cmd, undo, mustExec: true });
+    // } catch (ex) {
+    //   warn(`paste: "${ex.message}".`);
+    // }
   }
 
   /**

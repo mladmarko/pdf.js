@@ -97,7 +97,7 @@ class TextLayerBuilder {
     this.#textLayer = new TextLayer({
       textContentSource: this.pdfPage.streamTextContent(
         textContentParams || {
-          includeMarkedContent: true,
+          includeMarkedContent: false,
           disableNormalization: true,
         }
       ),
