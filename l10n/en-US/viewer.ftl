@@ -444,6 +444,10 @@ pdfjs-editor-colorpicker-pink =
     .title = Pink
 pdfjs-editor-colorpicker-red =
     .title = Red
+pdfjs-editor-colorpicker-purple =
+        .title = Purple
+pdfjs-editor-colorpicker-orange =
+        .title = Orange
 
 ## Show all highlights
 ## This is a toggle button to show/hide all the highlights.

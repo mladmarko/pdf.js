@@ -88,6 +88,8 @@ class ColorPicker {
       pink: "pdfjs-editor-colorpicker-pink",
       red: "pdfjs-editor-colorpicker-red",
       yellow: "pdfjs-editor-colorpicker-yellow",
+      purple: "pdfjs-editor-colorpicker-purple",
+      orange: "pdfjs-editor-colorpicker-orange",
     });
   }
 

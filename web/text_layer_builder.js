@@ -308,6 +308,15 @@ class TextLayerBuilder {
           anchor = anchor.parentNode;
         }
 
+        if (!modifyStart && range.endOffset === 0) {
+          do {
+            while (!anchor.previousSibling) {
+              anchor = anchor.parentNode;
+            }
+            anchor = anchor.previousSibling;
+          } while (!anchor.childNodes.length);
+        }
+
         const parentTextLayer = anchor.parentElement?.closest(".textLayer");
         const endDiv = this.#textLayers.get(parentTextLayer);
         if (endDiv) {

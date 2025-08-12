@@ -402,7 +402,7 @@ function isValidFetchUrl(url, baseUrl) {
   if (typeof PDFJSDev !== "undefined" && PDFJSDev.test("MOZCENTRAL")) {
     throw new Error("Not implemented: isValidFetchUrl");
   }
-  const res = baseUrl ? URL.parse(url, baseUrl) : URL.parse(url);
+  const res = baseUrl ? new URL(url, baseUrl) : new URL(url);
   // The Fetch API only supports the http/https protocols, and not file/ftp.
   return res?.protocol === "http:" || res?.protocol === "https:";
 }

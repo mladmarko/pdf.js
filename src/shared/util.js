@@ -432,7 +432,7 @@ function createValidAbsoluteUrl(url, baseUrl = null, options = null) {
     }
   }
 
-  const absoluteUrl = baseUrl ? URL.parse(url, baseUrl) : URL.parse(url);
+  const absoluteUrl = baseUrl ? new URL(url, baseUrl) : new URL(url);
   return _isValidProtocol(absoluteUrl) ? absoluteUrl : null;
 }
 

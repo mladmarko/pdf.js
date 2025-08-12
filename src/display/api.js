@@ -544,7 +544,7 @@ function getUrlProp(val) {
     }
 
     // The full path is required in the 'url' field.
-    const url = URL.parse(val, window.location);
+    const url = new URL(val, window.location.href);
     if (url) {
       return url.href;
     }
@@ -2117,7 +2117,7 @@ class PDFWorker {
       // Check if URLs have the same origin. For non-HTTP based URLs, returns
       // false.
       this._isSameOrigin = (baseUrl, otherUrl) => {
-        const base = URL.parse(baseUrl);
+        const base = new URL(baseUrl);
         if (!base?.origin || base.origin === "null") {
           return false; // non-HTTP url
         }
