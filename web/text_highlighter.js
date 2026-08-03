@@ -14,7 +14,6 @@
  */
 
 /** @typedef {import("./event_utils").EventBus} EventBus */
-// eslint-disable-next-line max-len
 /** @typedef {import("./pdf_find_controller").PDFFindController} PDFFindController */
 
 /**
@@ -25,11 +24,15 @@
  */
 
 /**
- * TextHighlighter handles highlighting matches from the FindController in
- * either the text layer or XFA layer depending on the type of document.
+ * TextHighlighter handles highlighting matches from the FindController.
+ * This version draws highlights as overlays instead of injecting <span>s,
+ * so the text layer DOM stays clean for selection / snippet saving.
  */
 class TextHighlighter {
   #eventAbortController = null;
+
+  /** @type {HTMLElement | null} */
+  #overlay = null;
 
   /**
    * @param {TextHighlighterOptions} options
@@ -45,11 +48,6 @@ class TextHighlighter {
   }
 
   /**
-   * Store two arrays that will map DOM nodes to text they should contain.
-   * The arrays should be of equal length and the array element at each index
-   * should correspond to the other. e.g.
-   * `items[0] = "<span>Item 0</span>" and texts[0] = "Item 0";
-   *
    * @param {Array<Node>} divs
    * @param {Array<string>} texts
    */
@@ -58,10 +56,6 @@ class TextHighlighter {
     this.textContentItemsStr = texts;
   }
 
-  /**
-   * Start listening for events to update the highlighter and check if there are
-   * any current matches that need be highlighted.
-   */
   enable() {
     if (!this.textDivs || !this.textContentItemsStr) {
       throw new Error("Text divs and strings have not been set.");
@@ -100,7 +94,6 @@ class TextHighlighter {
   }
 
   _convertMatches(matches, matchesLength) {
-    // Early exit if there is nothing to convert.
     if (!matches) {
       return [];
     }
@@ -112,10 +105,8 @@ class TextHighlighter {
     const result = [];
 
     for (let m = 0, mm = matches.length; m < mm; m++) {
-      // Calculate the start position.
       let matchIdx = matches[m];
 
-      // Loop over the divIdxs.
       while (i !== end && matchIdx >= iIndex + textContentItemsStr[i].length) {
         iIndex += textContentItemsStr[i].length;
         i++;
@@ -132,11 +123,8 @@ class TextHighlighter {
         },
       };
 
-      // Calculate the end position.
       matchIdx += matchesLength[m];
 
-      // Somewhat the same array as above, but use > instead of >= to get
-      // the end position right.
       while (i !== end && matchIdx > iIndex + textContentItemsStr[i].length) {
         iIndex += textContentItemsStr[i].length;
         i++;
@@ -151,136 +139,192 @@ class TextHighlighter {
     return result;
   }
 
+  /**
+   * Ensures an overlay container exists inside the text layer.
+   */
+  #ensureOverlay() {
+    if (this.#overlay?.isConnected) {
+      return this.#overlay;
+    }
+
+    const firstDiv = this.textDivs?.[0];
+    if (!firstDiv) {
+      return null;
+    }
+
+    const textLayer = firstDiv.parentElement;
+    if (!textLayer) {
+      return null;
+    }
+
+    let overlay = textLayer.querySelector(".highlightOverlay");
+    if (!overlay) {
+      overlay = document.createElement("div");
+      overlay.className = "highlightOverlay";
+      overlay.style.cssText = `
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+      `;
+      textLayer.append(overlay);
+    }
+
+    this.#overlay = overlay;
+    return overlay;
+  }
+
+  /**
+   * Finds the first text node inside a textDiv.
+   */
+  #findTextNode(el) {
+    if (el.nodeType === Node.TEXT_NODE) {
+      return el;
+    }
+    for (const child of el.childNodes) {
+      const found = this.#findTextNode(child);
+      if (found) {
+        return found;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Creates overlay highlight rectangles for one match using Range + getClientRects.
+   * Returns the first created element (useful for scrolling).
+   */
+  #createHighlightRects(match, className) {
+    const { textDivs, textContentItemsStr } = this;
+    const overlay = this.#ensureOverlay();
+    if (!overlay) {
+      return null;
+    }
+
+    const layerRect = overlay.getBoundingClientRect();
+    const created = [];
+
+    const addRects = (divIdx, startOffset, endOffset) => {
+      const div = textDivs[divIdx];
+      if (!div) {
+        return;
+      }
+
+      const textNode = this.#findTextNode(div);
+      if (!textNode) {
+        return;
+      }
+
+      const range = document.createRange();
+      try {
+        const len = textNode.length;
+        range.setStart(textNode, Math.min(Math.max(0, startOffset), len));
+        range.setEnd(textNode, Math.min(Math.max(0, endOffset), len));
+      } catch {
+        return;
+      }
+
+      const rects = range.getClientRects();
+      for (const rect of rects) {
+        if (rect.width === 0 && rect.height === 0) {
+          continue;
+        }
+
+        const el = document.createElement("div");
+        el.className = `highlight-overlay ${className}`;
+        el.style.cssText = `
+          position: absolute;
+          left: ${rect.left - layerRect.left}px;
+          top: ${rect.top - layerRect.top}px;
+          width: ${rect.width}px;
+          height: ${rect.height}px;
+          pointer-events: none;
+        `;
+        overlay.append(el);
+        created.push(el);
+      }
+    };
+
+    const { begin, end } = match;
+
+    if (begin.divIdx === end.divIdx) {
+      // Single textDiv
+      addRects(begin.divIdx, begin.offset, end.offset);
+    } else {
+      // Multi-div match
+      addRects(
+        begin.divIdx,
+        begin.offset,
+        textContentItemsStr[begin.divIdx].length
+      );
+
+      for (let n = begin.divIdx + 1; n < end.divIdx; n++) {
+        addRects(n, 0, textContentItemsStr[n].length);
+      }
+
+      addRects(end.divIdx, 0, end.offset);
+    }
+
+    return created[0] || null;
+  }
+
   _renderMatches(matches) {
-    // Early exit if there is nothing to render.
     if (matches.length === 0) {
       return;
     }
-    const { findController, pageIdx } = this;
-    const { textContentItemsStr, textDivs } = this;
 
+    const { findController, pageIdx } = this;
     const isSelectedPage = pageIdx === findController.selected.pageIdx;
     const selectedMatchIdx = findController.selected.matchIdx;
     const highlightAll = findController.state.highlightAll;
-    let prevEnd = null;
-    const infinity = {
-      divIdx: -1,
-      offset: undefined,
-    };
 
-    function beginText(begin, className) {
-      const divIdx = begin.divIdx;
-      textDivs[divIdx].textContent = "";
-      return appendTextToDiv(divIdx, 0, begin.offset, className);
-    }
+    let i0 = selectedMatchIdx;
+    let i1 = i0 + 1;
 
-    function appendTextToDiv(divIdx, fromOffset, toOffset, className) {
-      let div = textDivs[divIdx];
-      if (div.nodeType === Node.TEXT_NODE) {
-        const span = document.createElement("span");
-        div.before(span);
-        span.append(div);
-        textDivs[divIdx] = span;
-        div = span;
-      }
-      const content = textContentItemsStr[divIdx].substring(
-        fromOffset,
-        toOffset
-      );
-      const node = document.createTextNode(content);
-      if (className) {
-        const span = document.createElement("span");
-        span.className = `${className} appended`;
-        span.append(node);
-        div.append(span);
-
-        if (className.includes("selected")) {
-          const { left } = span.getClientRects()[0];
-          const parentLeft = div.getBoundingClientRect().left;
-          return left - parentLeft;
-        }
-        return 0;
-      }
-
-      div.append(node);
-      return 0;
-    }
-
-    let i0 = selectedMatchIdx,
-      i1 = i0 + 1;
     if (highlightAll) {
       i0 = 0;
       i1 = matches.length;
     } else if (!isSelectedPage) {
-      // Not highlighting all and this isn't the selected page, so do nothing.
       return;
     }
 
-    let lastDivIdx = -1;
-    let lastOffset = -1;
+    // Clear previous overlays
+    const overlay = this.#ensureOverlay();
+    if (overlay) {
+      overlay.replaceChildren();
+    }
+
+    let selectedElement = null;
+    let selectedLeft = 0;
+
     for (let i = i0; i < i1; i++) {
       const match = matches[i];
-      const begin = match.begin;
-      if (begin.divIdx === lastDivIdx && begin.offset === lastOffset) {
-        // It's possible to be in this situation if we searched for a 'f' and we
-        // have a ligature 'ff' in the text. The 'ff' has to be highlighted two
-        // times.
-        continue;
-      }
-      lastDivIdx = begin.divIdx;
-      lastOffset = begin.offset;
-
-      const end = match.end;
       const isSelected = isSelectedPage && i === selectedMatchIdx;
-      const highlightSuffix = isSelected ? " selected" : "";
-      let selectedLeft = 0;
+      const className = "highlight" + (isSelected ? " selected" : "");
 
-      // Match inside new div.
-      if (!prevEnd || begin.divIdx !== prevEnd.divIdx) {
-        // If there was a previous div, then add the text at the end.
-        if (prevEnd !== null) {
-          appendTextToDiv(prevEnd.divIdx, prevEnd.offset, infinity.offset);
+      const firstEl = this.#createHighlightRects(match, className);
+
+      if (isSelected && firstEl) {
+        selectedElement = firstEl;
+
+        // Approximate selectedLeft the same way the original code did
+        // (relative to the textDiv)
+        const div = this.textDivs[match.begin.divIdx];
+        if (div) {
+          const divRect = div.getBoundingClientRect();
+          const elRect = firstEl.getBoundingClientRect();
+          selectedLeft = elRect.left - divRect.left;
         }
-        // Clear the divs and set the content until the starting point.
-        beginText(begin);
-      } else {
-        appendTextToDiv(prevEnd.divIdx, prevEnd.offset, begin.offset);
-      }
-
-      if (begin.divIdx === end.divIdx) {
-        selectedLeft = appendTextToDiv(
-          begin.divIdx,
-          begin.offset,
-          end.offset,
-          "highlight" + highlightSuffix
-        );
-      } else {
-        selectedLeft = appendTextToDiv(
-          begin.divIdx,
-          begin.offset,
-          infinity.offset,
-          "highlight begin" + highlightSuffix
-        );
-        for (let n0 = begin.divIdx + 1, n1 = end.divIdx; n0 < n1; n0++) {
-          textDivs[n0].className = "highlight middle" + highlightSuffix;
-        }
-        beginText(end, "highlight end" + highlightSuffix);
-      }
-      prevEnd = end;
-
-      if (isSelected) {
-        // Attempt to scroll the selected match into view.
-        findController.scrollMatchIntoView({
-          element: textDivs[begin.divIdx],
-          selectedLeft,
-          pageIndex: pageIdx,
-          matchIndex: selectedMatchIdx,
-        });
       }
     }
 
-    if (prevEnd) {
-      appendTextToDiv(prevEnd.divIdx, prevEnd.offset, infinity.offset);
+    if (selectedElement) {
+      findController.scrollMatchIntoView({
+        element: this.textDivs[matches[selectedMatchIdx].begin.divIdx],
+        selectedLeft,
+        pageIndex: pageIdx,
+        matchIndex: selectedMatchIdx,
+      });
     }
   }
 
@@ -288,28 +332,22 @@ class TextHighlighter {
     if (!this.enabled && !reset) {
       return;
     }
-    const { findController, matches, pageIdx } = this;
-    const { textContentItemsStr, textDivs } = this;
-    let clearedUntilDivIdx = -1;
 
-    // Clear all current matches.
-    for (const match of matches) {
-      const begin = Math.max(clearedUntilDivIdx, match.begin.divIdx);
-      for (let n = begin, end = match.end.divIdx; n <= end; n++) {
-        const div = textDivs[n];
-        div.textContent = textContentItemsStr[n];
-        div.className = "";
-      }
-      clearedUntilDivIdx = match.end.divIdx + 1;
+    // Clear overlay
+    if (this.#overlay) {
+      this.#overlay.replaceChildren();
     }
 
-    if (!findController?.highlightMatches || reset) {
+    // Note: we no longer touch textDivs.textContent or className
+
+    if (!this.findController?.highlightMatches || reset) {
+      this.matches = [];
       return;
     }
-    // Convert the matches on the `findController` into the match format
-    // used for the textLayer.
-    const pageMatches = findController.pageMatches[pageIdx] || null;
-    const pageMatchesLength = findController.pageMatchesLength[pageIdx] || null;
+
+    const pageMatches = this.findController.pageMatches[this.pageIdx] || null;
+    const pageMatchesLength =
+      this.findController.pageMatchesLength[this.pageIdx] || null;
 
     this.matches = this._convertMatches(pageMatches, pageMatchesLength);
     this._renderMatches(this.matches);

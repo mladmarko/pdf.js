@@ -1610,6 +1610,21 @@ dialog :link {
     }
   }
 
+  .highlightOverlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .highlight-overlay.highlight {
+    background-color: rgba(180, 0, 170, 0.25);
+  }
+
+  .highlight-overlay.highlight.selected {
+    background-color: rgba(0, 100, 0, 0.35);
+  }
+
   #loadingBar {
     /* Define these variables here, and not in :root, to avoid reflowing the
        entire viewer when updating progress (see issue 15958). */
