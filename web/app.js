@@ -2575,12 +2575,12 @@ if (typeof PDFJSDev === "undefined" || PDFJSDev.test("GENERIC")) {
     if (!file) {
       return;
     }
-    const viewerOrigin = URL.parse(window.location)?.origin || "null";
+    const viewerOrigin = new URL(window.location.href)?.origin || "null";
     if (HOSTED_VIEWER_ORIGINS.has(viewerOrigin)) {
       // Hosted or local viewer, allow for any file locations
       return;
     }
-    const fileOrigin = URL.parse(file, window.location)?.origin;
+    const fileOrigin = new URL(file, window.location.href)?.origin;
     if (fileOrigin === viewerOrigin) {
       return;
     }

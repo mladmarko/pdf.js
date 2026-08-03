@@ -776,6 +776,8 @@ class AnnotationEditorUIManager {
 
   #enableHighlightFloatingButton = false;
 
+  #highlightToolbarVisible = true;
+
   #enableUpdatedAddImage = false;
 
   #enableNewAltTextWhenAddingImage = false;
@@ -849,138 +851,139 @@ class AnnotationEditorUIManager {
 
   static TRANSLATE_BIG = 10; // page units.
 
-  static get _keyboardManager() {
-    const proto = AnnotationEditorUIManager.prototype;
-
-    /**
-     * If the focused element is an input, we don't want to handle the arrow.
-     * For example, sliders can be controlled with the arrow keys.
-     */
-    const arrowChecker = self =>
-      self.#container.contains(document.activeElement) &&
-      document.activeElement.tagName !== "BUTTON" &&
-      self.hasSomethingToControl();
-
-    const textInputChecker = (_self, { target: el }) => {
-      if (el instanceof HTMLInputElement) {
-        const { type } = el;
-        return type !== "text" && type !== "number";
-      }
-      return true;
-    };
-
-    const small = this.TRANSLATE_SMALL;
-    const big = this.TRANSLATE_BIG;
-
-    return shadow(
-      this,
-      "_keyboardManager",
-      new KeyboardManager([
-        [
-          ["ctrl+a", "mac+meta+a"],
-          proto.selectAll,
-          { checker: textInputChecker },
-        ],
-        [["ctrl+z", "mac+meta+z"], proto.undo, { checker: textInputChecker }],
-        [
-          // On mac, depending of the OS version, the event.key is either "z" or
-          // "Z" when the user presses "meta+shift+z".
-          [
-            "ctrl+y",
-            "ctrl+shift+z",
-            "mac+meta+shift+z",
-            "ctrl+shift+Z",
-            "mac+meta+shift+Z",
-          ],
-          proto.redo,
-          { checker: textInputChecker },
-        ],
-        [
-          [
-            "Backspace",
-            "alt+Backspace",
-            "ctrl+Backspace",
-            "shift+Backspace",
-            "mac+Backspace",
-            "mac+alt+Backspace",
-            "mac+ctrl+Backspace",
-            "Delete",
-            "ctrl+Delete",
-            "shift+Delete",
-            "mac+Delete",
-          ],
-          proto.delete,
-          { checker: textInputChecker },
-        ],
-        [
-          ["Enter"],
-          proto.addNewEditorFromKeyboard,
-          {
-            // Those shortcuts can be used in the toolbar for some other actions
-            // like zooming, hence we need to check if the container has the
-            // focus.
-            checker: (self, { target: el }) =>
-              !(el instanceof HTMLButtonElement) &&
-              self.#container.contains(el) &&
-              !self.isEnterHandled,
-          },
-        ],
-        [
-          ["Space"],
-          proto.addNewEditorFromKeyboard,
-          {
-            // Those shortcuts can be used in the toolbar for some other actions
-            // like zooming, hence we need to check if the container has the
-            // focus.
-            checker: (self, { target: el }) =>
-              !(el instanceof HTMLButtonElement) &&
-              self.#container.contains(document.activeElement),
-          },
-        ],
-        [["Escape"], proto.unselectAll],
-        [
-          ["ArrowLeft"],
-          proto.translateSelectedEditors,
-          { args: [-small, 0], checker: arrowChecker },
-        ],
-        [
-          ["ctrl+ArrowLeft", "mac+shift+ArrowLeft"],
-          proto.translateSelectedEditors,
-          { args: [-big, 0], checker: arrowChecker },
-        ],
-        [
-          ["ArrowRight"],
-          proto.translateSelectedEditors,
-          { args: [small, 0], checker: arrowChecker },
-        ],
-        [
-          ["ctrl+ArrowRight", "mac+shift+ArrowRight"],
-          proto.translateSelectedEditors,
-          { args: [big, 0], checker: arrowChecker },
-        ],
-        [
-          ["ArrowUp"],
-          proto.translateSelectedEditors,
-          { args: [0, -small], checker: arrowChecker },
-        ],
-        [
-          ["ctrl+ArrowUp", "mac+shift+ArrowUp"],
-          proto.translateSelectedEditors,
-          { args: [0, -big], checker: arrowChecker },
-        ],
-        [
-          ["ArrowDown"],
-          proto.translateSelectedEditors,
-          { args: [0, small], checker: arrowChecker },
-        ],
-        [
-          ["ctrl+ArrowDown", "mac+shift+ArrowDown"],
-          proto.translateSelectedEditors,
-          { args: [0, big], checker: arrowChecker },
-        ],
-      ])
-    );
-  }
+  // @Cluing disable keyboard shortcuts
+  // static get _keyboardManager() {
+  //   const proto = AnnotationEditorUIManager.prototype;
+  //
+  //   /**
+  //    * If the focused element is an input, we don't want to handle the arrow.
+  //    * For example, sliders can be controlled with the arrow keys.
+  //    */
+  //   const arrowChecker = self =>
+  //     self.#container.contains(document.activeElement) &&
+  //     document.activeElement.tagName !== "BUTTON" &&
+  //     self.hasSomethingToControl();
+  //
+  //   const textInputChecker = (_self, { target: el }) => {
+  //     if (el instanceof HTMLInputElement) {
+  //       const { type } = el;
+  //       return type !== "text" && type !== "number";
+  //     }
+  //     return true;
+  //   };
+  //
+  //   const small = this.TRANSLATE_SMALL;
+  //   const big = this.TRANSLATE_BIG;
+  //
+  //   return shadow(
+  //     this,
+  //     "_keyboardManager",
+  //     new KeyboardManager([
+  //       [
+  //         ["ctrl+a", "mac+meta+a"],
+  //         proto.selectAll,
+  //         { checker: textInputChecker },
+  //       ],
+  //       [["ctrl+z", "mac+meta+z"], proto.undo, { checker: textInputChecker }],
+  //       [
+  //         // On mac, depending of the OS version, the event.key is either "z" or
+  //         // "Z" when the user presses "meta+shift+z".
+  //         [
+  //           "ctrl+y",
+  //           "ctrl+shift+z",
+  //           "mac+meta+shift+z",
+  //           "ctrl+shift+Z",
+  //           "mac+meta+shift+Z",
+  //         ],
+  //         proto.redo,
+  //         { checker: textInputChecker },
+  //       ],
+  //       [
+  //         [
+  //           "Backspace",
+  //           "alt+Backspace",
+  //           "ctrl+Backspace",
+  //           "shift+Backspace",
+  //           "mac+Backspace",
+  //           "mac+alt+Backspace",
+  //           "mac+ctrl+Backspace",
+  //           "Delete",
+  //           "ctrl+Delete",
+  //           "shift+Delete",
+  //           "mac+Delete",
+  //         ],
+  //         proto.delete,
+  //         { checker: textInputChecker },
+  //       ],
+  //       [
+  //         ["Enter"],
+  //         proto.addNewEditorFromKeyboard,
+  //         {
+  //           // Those shortcuts can be used in the toolbar for some other actions
+  //           // like zooming, hence we need to check if the container has the
+  //           // focus.
+  //           checker: (self, { target: el }) =>
+  //             !(el instanceof HTMLButtonElement) &&
+  //             self.#container.contains(el) &&
+  //             !self.isEnterHandled,
+  //         },
+  //       ],
+  //       [
+  //         ["Space"],
+  //         proto.addNewEditorFromKeyboard,
+  //         {
+  //           // Those shortcuts can be used in the toolbar for some other actions
+  //           // like zooming, hence we need to check if the container has the
+  //           // focus.
+  //           checker: (self, { target: el }) =>
+  //             !(el instanceof HTMLButtonElement) &&
+  //             self.#container.contains(document.activeElement),
+  //         },
+  //       ],
+  //       [["Escape"], proto.unselectAll],
+  //       [
+  //         ["ArrowLeft"],
+  //         proto.translateSelectedEditors,
+  //         { args: [-small, 0], checker: arrowChecker },
+  //       ],
+  //       [
+  //         ["ctrl+ArrowLeft", "mac+shift+ArrowLeft"],
+  //         proto.translateSelectedEditors,
+  //         { args: [-big, 0], checker: arrowChecker },
+  //       ],
+  //       [
+  //         ["ArrowRight"],
+  //         proto.translateSelectedEditors,
+  //         { args: [small, 0], checker: arrowChecker },
+  //       ],
+  //       [
+  //         ["ctrl+ArrowRight", "mac+shift+ArrowRight"],
+  //         proto.translateSelectedEditors,
+  //         { args: [big, 0], checker: arrowChecker },
+  //       ],
+  //       [
+  //         ["ArrowUp"],
+  //         proto.translateSelectedEditors,
+  //         { args: [0, -small], checker: arrowChecker },
+  //       ],
+  //       [
+  //         ["ctrl+ArrowUp", "mac+shift+ArrowUp"],
+  //         proto.translateSelectedEditors,
+  //         { args: [0, -big], checker: arrowChecker },
+  //       ],
+  //       [
+  //         ["ArrowDown"],
+  //         proto.translateSelectedEditors,
+  //         { args: [0, small], checker: arrowChecker },
+  //       ],
+  //       [
+  //         ["ctrl+ArrowDown", "mac+shift+ArrowDown"],
+  //         proto.translateSelectedEditors,
+  //         { args: [0, big], checker: arrowChecker },
+  //       ],
+  //     ])
+  //   );
+  // }
 
   constructor(
     container,
@@ -998,7 +1001,8 @@ class AnnotationEditorUIManager {
     enableNewAltTextWhenAddingImage,
     mlManager,
     editorUndoBar,
-    supportsPinchToZoom
+    supportsPinchToZoom,
+    highlightToolbarVisible
   ) {
     const signal = (this._signal = this.#abortController.signal);
     this.#container = container;
@@ -1043,7 +1047,8 @@ class AnnotationEditorUIManager {
       capture: true,
       signal,
     });
-    this.#addSelectionListener();
+    // @Cluing disable text selection handler
+    // this.#addSelectionListener();
     this.#addDragAndDropListeners();
     this.#addKeyboardManager();
     this.#annotationStorage = pdfDocument.annotationStorage;
@@ -1051,6 +1056,7 @@ class AnnotationEditorUIManager {
     this.#pageColors = pageColors;
     this.#highlightColors = highlightColors || null;
     this.#enableHighlightFloatingButton = enableHighlightFloatingButton;
+    this.#highlightToolbarVisible = highlightToolbarVisible;
     this.#enableUpdatedAddImage = enableUpdatedAddImage;
     this.#enableNewAltTextWhenAddingImage = enableNewAltTextWhenAddingImage;
     this.#mlManager = mlManager || null;
@@ -1215,6 +1221,10 @@ class AnnotationEditorUIManager {
       this.disableUserSelect(false);
     }
     this.#currentDrawingSession = layer;
+  }
+
+  highlightToolbarVisible(value) {
+    this.#highlightToolbarVisible = value;
   }
 
   setMainHighlightColorPicker(colorPicker) {
@@ -1406,7 +1416,7 @@ class AnnotationEditorUIManager {
 
   #getLayerForTextLayer(textLayer) {
     const { currentLayer } = this;
-    if (currentLayer.hasTextLayer(textLayer)) {
+    if (currentLayer?.hasTextLayer(textLayer)) {
       return currentLayer;
     }
     for (const layer of this.#allLayers.values()) {
@@ -1417,7 +1427,12 @@ class AnnotationEditorUIManager {
     return null;
   }
 
-  highlightSelection(methodOfCreation = "", comment = false) {
+  // @Cluing color parameter added so we can create a new highlighter with a specific color, returning editor after creation
+  highlightSelection(
+    methodOfCreation = "",
+    comment = false,
+    color = "#FFFF98"
+  ) {
     const selection = document.getSelection();
     if (!selection || selection.isCollapsed) {
       return;
@@ -1443,6 +1458,7 @@ class AnnotationEditorUIManager {
         focusNode,
         focusOffset,
         text,
+        color,
       });
       if (isNoneMode) {
         this.showAllEditors("highlight", true, /* updateButton = */ true);
@@ -1450,12 +1466,15 @@ class AnnotationEditorUIManager {
       if (comment) {
         editor?.editComment();
       }
+
+      return editor;
     };
     if (isNoneMode) {
       this.switchToMode(AnnotationEditorType.HIGHLIGHT, callback);
       return;
     }
-    callback();
+
+    return callback();
   }
 
   commentSelection(methodOfCreation = "") {
@@ -1619,13 +1638,14 @@ class AnnotationEditorUIManager {
     }
   }
 
-  #addSelectionListener() {
-    document.addEventListener(
-      "selectionchange",
-      this.#selectionChange.bind(this),
-      { signal: this._signal }
-    );
-  }
+  // @Cluing not used anymore
+  // #addSelectionListener() {
+  //   document.addEventListener(
+  //     "selectionchange",
+  //     this.#selectionChange.bind(this),
+  //     { signal: this._signal }
+  //   );
+  // }
 
   #addFocusManager() {
     if (this.#focusManagerAC) {
@@ -1803,61 +1823,61 @@ class AnnotationEditorUIManager {
    * @param {ClipboardEvent} event
    */
   async paste(event) {
-    event.preventDefault();
-    const { clipboardData } = event;
-    for (const item of clipboardData.items) {
-      for (const editorType of this.#editorTypes) {
-        if (editorType.isHandlingMimeForPasting(item.type)) {
-          editorType.paste(item, this.currentLayer);
-          return;
-        }
-      }
-    }
-
-    let data = clipboardData.getData("application/pdfjs");
-    if (!data) {
-      return;
-    }
-
-    try {
-      data = JSON.parse(data);
-    } catch (ex) {
-      warn(`paste: "${ex.message}".`);
-      return;
-    }
-
-    if (!Array.isArray(data)) {
-      return;
-    }
-
-    this.unselectAll();
-    const layer = this.currentLayer;
-
-    try {
-      const newEditors = [];
-      for (const editor of data) {
-        const deserializedEditor = await layer.deserialize(editor);
-        if (!deserializedEditor) {
-          return;
-        }
-        newEditors.push(deserializedEditor);
-      }
-
-      const cmd = () => {
-        for (const editor of newEditors) {
-          this.#addEditorToLayer(editor);
-        }
-        this.#selectEditors(newEditors);
-      };
-      const undo = () => {
-        for (const editor of newEditors) {
-          editor.remove();
-        }
-      };
-      this.addCommands({ cmd, undo, mustExec: true });
-    } catch (ex) {
-      warn(`paste: "${ex.message}".`);
-    }
+    // event.preventDefault();
+    // const { clipboardData } = event;
+    // for (const item of clipboardData.items) {
+    //   for (const editorType of this.#editorTypes) {
+    //     if (editorType.isHandlingMimeForPasting(item.type)) {
+    //       editorType.paste(item, this.currentLayer);
+    //       return;
+    //     }
+    //   }
+    // }
+    //
+    // let data = clipboardData.getData("application/pdfjs");
+    // if (!data) {
+    //   return;
+    // }
+    //
+    // try {
+    //   data = JSON.parse(data);
+    // } catch (ex) {
+    //   warn(`paste: "${ex.message}".`);
+    //   return;
+    // }
+    //
+    // if (!Array.isArray(data)) {
+    //   return;
+    // }
+    //
+    // this.unselectAll();
+    // const layer = this.currentLayer;
+    //
+    // try {
+    //   const newEditors = [];
+    //   for (const editor of data) {
+    //     const deserializedEditor = await layer.deserialize(editor);
+    //     if (!deserializedEditor) {
+    //       return;
+    //     }
+    //     newEditors.push(deserializedEditor);
+    //   }
+    //
+    //   const cmd = () => {
+    //     for (const editor of newEditors) {
+    //       this.#addEditorToLayer(editor);
+    //     }
+    //     this.#selectEditors(newEditors);
+    //   };
+    //   const undo = () => {
+    //     for (const editor of newEditors) {
+    //       editor.remove();
+    //     }
+    //   };
+    //   this.addCommands({ cmd, undo, mustExec: true });
+    // } catch (ex) {
+    //   warn(`paste: "${ex.message}".`);
+    // }
   }
 
   /**
@@ -1868,12 +1888,14 @@ class AnnotationEditorUIManager {
     if (!this.isShiftKeyDown && event.key === "Shift") {
       this.isShiftKeyDown = true;
     }
-    if (
-      this.#mode !== AnnotationEditorType.NONE &&
-      !this.isEditorHandlingKeyboard
-    ) {
-      AnnotationEditorUIManager._keyboardManager.exec(this, event);
-    }
+
+    // @Cluing removing keyboard shortcuts
+    // if (
+    //   this.#mode !== AnnotationEditorType.NONE &&
+    //   !this.isEditorHandlingKeyboard
+    // ) {
+    //   AnnotationEditorUIManager._keyboardManager.exec(this, event);
+    // }
   }
 
   /**
@@ -2107,13 +2129,16 @@ class AnnotationEditorUIManager {
     mustEnterInEditMode = false,
     editComment = false
   ) {
+
     if (this.#mode === mode) {
+      console.log("sane mode", this.#mode);
       return;
     }
 
     if (this.#updateModeCapability) {
       await this.#updateModeCapability.promise;
       if (!this.#updateModeCapability) {
+        console.log("destroyed")
         // This ui manager has been destroyed.
         return;
       }
@@ -2501,7 +2526,7 @@ class AnnotationEditorUIManager {
       return;
     }
     this.#selectedEditors.add(editor);
-    editor.select();
+    editor.select(this.#highlightToolbarVisible);
     this.#dispatchUpdateUI(editor.propertiesToUpdate);
     this.#dispatchUpdateStates({
       hasSelectedEditor: true,
@@ -2528,7 +2553,7 @@ class AnnotationEditorUIManager {
     this.#selectedEditors.clear();
 
     this.#selectedEditors.add(editor);
-    editor.select();
+    editor.select(this.#highlightToolbarVisible);
     this.#dispatchUpdateUI(editor.propertiesToUpdate);
     this.#dispatchUpdateStates({
       hasSelectedEditor: true,
@@ -2674,7 +2699,7 @@ class AnnotationEditorUIManager {
         continue;
       }
       this.#selectedEditors.add(editor);
-      editor.select();
+      editor.select(this.#highlightToolbarVisible);
     }
     this.#dispatchUpdateStates({ hasSelectedEditor: this.hasSelection });
   }

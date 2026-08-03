@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="52a78148-037a-46f4-bf2b-e88a9deb303b" name="Changes" comment="URL.parse replaced with new URL to support older browsers. Translation added for new colors. Bad highlight when selecting text at the end of page bug fix.">
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/l10n/en-US/viewer.ftl" beforeDir="false" afterPath="$PROJECT_DIR$/l10n/en-US/viewer.ftl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/display/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/display/api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/display/api_utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/display/api_utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/display/display_utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/display/display_utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/display/editor/annotation_editor_layer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/display/editor/annotation_editor_layer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/display/editor/color_picker.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/display/editor/color_picker.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/display/editor/editor.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/display/editor/editor.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/display/editor/highlight.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/display/editor/highlight.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/display/editor/toolbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/display/editor/toolbar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/display/editor/tools.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/display/editor/tools.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/display/network_utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/display/network_utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shared/util.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/util.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/autolinker.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/autolinker.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/pdf_link_service.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/pdf_link_service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/pdf_viewer.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/pdf_viewer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/text_highlighter.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/text_highlighter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/text_layer_builder.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/text_layer_builder.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/viewer.css" beforeDir="false" afterPath="$PROJECT_DIR$/web/viewer.css" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="pdf-reader-update" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;mladmarko&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:mladmarko/pdf.js.git&quot;,
+    &quot;accountId&quot;: &quot;5d2c2ac0-9d0d-410c-9307-63b77250815b&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2tcYYovCKsxIksVk9ZmDizpBM2U" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Node.js.annotation_editor_layer.js.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;upgrade/pdfjs-v6.1.200&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/markomladenovic/Documents/Workspace/pdf.js&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.stylelint&quot;: &quot;/Users/markomladenovic/Documents/Workspace/pdf.js/node_modules/stylelint&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/markomladenovic/Documents/Workspace/pdf.js/node_modules/prettier&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/markomladenovic/Documents/Workspace/pdf.js/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;HTML&quot;,
+      &quot;JSON&quot;
+    ]
+  }
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-a71380e98a7c-JavaScript-WS-252.28539.60" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="52a78148-037a-46f4-bf2b-e88a9deb303b" name="Changes" comment="" />
+      <created>1740652879502</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1740652879502</updated>
+      <workItem from="1740652880635" duration="11220000" />
+      <workItem from="1740998488855" duration="20391000" />
+      <workItem from="1741338793104" duration="11050000" />
+      <workItem from="1741771550859" duration="2190000" />
+      <workItem from="1741858764894" duration="8845000" />
+      <workItem from="1742206897751" duration="22243000" />
+      <workItem from="1742464888404" duration="17719000" />
+      <workItem from="1742806867588" duration="26624000" />
+      <workItem from="1743070116700" duration="8925000" />
+      <workItem from="1743082061598" duration="1926000" />
+      <workItem from="1743084909080" duration="13833000" />
+      <workItem from="1743583486354" duration="4000" />
+      <workItem from="1743679055350" duration="2849000" />
+      <workItem from="1743682724674" duration="10000" />
+      <workItem from="1743682920642" duration="2966000" />
+      <workItem from="1744880843982" duration="6036000" />
+      <workItem from="1746622559163" duration="13113000" />
+      <workItem from="1747125174338" duration="8487000" />
+      <workItem from="1747821304214" duration="3247000" />
+      <workItem from="1747997857265" duration="8625000" />
+      <workItem from="1749813724736" duration="670000" />
+      <workItem from="1750063290245" duration="1938000" />
+      <workItem from="1751462376795" duration="5261000" />
+      <workItem from="1751632378748" duration="5187000" />
+      <workItem from="1752061332812" duration="1698000" />
+      <workItem from="1754649708257" duration="1528000" />
+      <workItem from="1754995943742" duration="3484000" />
+      <workItem from="1755005720246" duration="3157000" />
+      <workItem from="1756213591877" duration="4607000" />
+      <workItem from="1756218685112" duration="1303000" />
+      <workItem from="1756289553672" duration="4201000" />
+      <workItem from="1756373626173" duration="4811000" />
+      <workItem from="1757934887384" duration="6042000" />
+      <workItem from="1762769453565" duration="1628000" />
+      <workItem from="1783931579170" duration="25807000" />
+      <workItem from="1785750594020" duration="5582000" />
+    </task>
+    <task id="LOCAL-00001" summary="Highlighter highlighting tool disabled, free hand highlights removed, delete button removed from highlight toolbar, readme updated.">
+      <option name="closed" value="true" />
+      <created>1742561975646</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1742561975646</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Enable/disable autofocus after highlight creation added, same added for highlighter toolbar.">
+      <option name="closed" value="true" />
+      <created>1742982412967</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1742982412967</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Bug fixes.">
+      <option name="closed" value="true" />
+      <created>1743508963955</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1743508963955</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Marked content disabled, paste handler removed.">
+      <option name="closed" value="true" />
+      <created>1744881141363</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1744881141363</updated>
+    </task>
+    <task id="LOCAL-00005" summary="URL.parse replaced with new URL to support older browsers. Translation added for new colors. Bad highlight when selecting text at the end of page bug fix.">
+      <option name="closed" value="true" />
+      <created>1755004841070</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1755004841070</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <MESSAGE value="Highlighter highlighting tool disabled, free hand highlights removed, delete button removed from highlight toolbar, readme updated." />
+    <MESSAGE value="Enable/disable autofocus after highlight creation added, same added for highlighter toolbar." />
+    <MESSAGE value="Bug fixes." />
+    <MESSAGE value="Marked content disabled, paste handler removed." />
+    <MESSAGE value="URL.parse replaced with new URL to support older browsers. Translation added for new colors. Bad highlight when selecting text at the end of page bug fix." />
+    <MESSAGE value="Update to latest version" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update to latest version" />
+  </component>
+</project>

@@ -291,7 +291,10 @@ class PDFLinkService {
     // Strip userinfo (user:password@) from URLs used for display, to prevent
     // phishing via hostname-spoofing (e.g. https://trusted.example@attacker.example/).
     let displayUrl = url;
-    const parsedUrl = URL.parse(url);
+    let parsedUrl;
+    try {
+      parsedUrl = new URL(url);
+    } catch {}
     if (parsedUrl?.username || parsedUrl?.password) {
       parsedUrl.username = parsedUrl.password = "";
       displayUrl = parsedUrl.href;

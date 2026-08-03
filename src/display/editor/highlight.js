@@ -28,7 +28,6 @@ import {
   HighlightAnnotationElement,
   InkAnnotationElement,
 } from "../annotation_layer.js";
-import { noContextMenu, stopEvent } from "../display_utils.js";
 import { AnnotationEditor } from "./editor.js";
 import { ColorPicker } from "./color_picker.js";
 
@@ -467,7 +466,9 @@ class HighlightEditor extends AnnotationEditor {
     if (!this.annotationElementId) {
       this.parent.addUndoableEditor(this);
     }
-    if (focus) {
+
+    // @Cluing added autoFocus control on highlight creation
+    if (focus && this.parent.autoFocusHighlight) {
       this.div.focus();
     }
   }
@@ -705,8 +706,8 @@ class HighlightEditor extends AnnotationEditor {
   }
 
   /** @inheritdoc */
-  select() {
-    super.select();
+  select(showHighlightToolbar = true) {
+    super.select(showHighlightToolbar);
     if (!this.#outlineId) {
       return;
     }
@@ -790,95 +791,96 @@ class HighlightEditor extends AnnotationEditor {
     return this.#highlightOutlines.serialize(rect, this.#getRotation());
   }
 
-  static startHighlighting(parent, isLTR, { target: textLayer, x, y }) {
-    const {
-      x: layerX,
-      y: layerY,
-      width: parentWidth,
-      height: parentHeight,
-    } = textLayer.getBoundingClientRect();
+  // @Cluing free hand highlighting, not needed anymore
+  // static startHighlighting(parent, isLTR, { target: textLayer, x, y }) {
+  //   const {
+  //     x: layerX,
+  //     y: layerY,
+  //     width: parentWidth,
+  //     height: parentHeight,
+  //   } = textLayer.getBoundingClientRect();
+  //
+  //   const ac = new AbortController();
+  //   const signal = parent.combinedSignal(ac);
+  //
+  //   const pointerUpCallback = e => {
+  //     ac.abort();
+  //     this.#endHighlight(parent, e);
+  //   };
+  //   window.addEventListener("blur", pointerUpCallback, { signal });
+  //   window.addEventListener("pointerup", pointerUpCallback, { signal });
+  //   window.addEventListener(
+  //     "pointerdown",
+  //     stopEvent /* Avoid to have undesired clicks during the drawing. */,
+  //     {
+  //       capture: true,
+  //       passive: false,
+  //       signal,
+  //     }
+  //   );
+  //   window.addEventListener("contextmenu", noContextMenu, { signal });
+  //
+  //   textLayer.addEventListener(
+  //     "pointermove",
+  //     this.#highlightMove.bind(this, parent),
+  //     { signal }
+  //   );
+  //   this._freeHighlight = new FreeHighlightOutliner(
+  //     { x, y },
+  //     [layerX, layerY, parentWidth, parentHeight],
+  //     parent.scale,
+  //     this._defaultThickness / 2,
+  //     isLTR,
+  //     /* innerMargin = */ 0.001
+  //   );
+  //   ({ id: this._freeHighlightId, clipPathId: this._freeHighlightClipId } =
+  //     parent.drawLayer.draw(
+  //       {
+  //         bbox: [0, 0, 1, 1],
+  //         root: {
+  //           viewBox: "0 0 1 1",
+  //           fill: this._defaultColor,
+  //           "fill-opacity": this._defaultOpacity,
+  //         },
+  //         rootClass: {
+  //           highlight: true,
+  //           free: true,
+  //         },
+  //         path: {
+  //           d: this._freeHighlight.toSVGPath(),
+  //         },
+  //       },
+  //       /* isPathUpdatable = */ true,
+  //       /* hasClip = */ true
+  //     ));
+  // }
 
-    const ac = new AbortController();
-    const signal = parent.combinedSignal(ac);
+  // static #highlightMove(parent, event) {
+  //   if (this._freeHighlight.add(event)) {
+  //     // Redraw only if the point has been added.
+  //     parent.drawLayer.updateProperties(this._freeHighlightId, {
+  //       path: {
+  //         d: this._freeHighlight.toSVGPath(),
+  //       },
+  //     });
+  //   }
+  // }
 
-    const pointerUpCallback = e => {
-      ac.abort();
-      this.#endHighlight(parent, e);
-    };
-    window.addEventListener("blur", pointerUpCallback, { signal });
-    window.addEventListener("pointerup", pointerUpCallback, { signal });
-    window.addEventListener(
-      "pointerdown",
-      stopEvent /* Avoid to have undesired clicks during the drawing. */,
-      {
-        capture: true,
-        passive: false,
-        signal,
-      }
-    );
-    window.addEventListener("contextmenu", noContextMenu, { signal });
-
-    textLayer.addEventListener(
-      "pointermove",
-      this.#highlightMove.bind(this, parent),
-      { signal }
-    );
-    this._freeHighlight = new FreeHighlightOutliner(
-      { x, y },
-      [layerX, layerY, parentWidth, parentHeight],
-      parent.scale,
-      this._defaultThickness / 2,
-      isLTR,
-      /* innerMargin = */ 0.001
-    );
-    ({ id: this._freeHighlightId, clipPathId: this._freeHighlightClipId } =
-      parent.drawLayer.draw(
-        {
-          bbox: [0, 0, 1, 1],
-          root: {
-            viewBox: "0 0 1 1",
-            fill: this._defaultColor,
-            "fill-opacity": this._defaultOpacity,
-          },
-          rootClass: {
-            highlight: true,
-            free: true,
-          },
-          path: {
-            d: this._freeHighlight.toSVGPath(),
-          },
-        },
-        /* isPathUpdatable = */ true,
-        /* hasClip = */ true
-      ));
-  }
-
-  static #highlightMove(parent, event) {
-    if (this._freeHighlight.add(event)) {
-      // Redraw only if the point has been added.
-      parent.drawLayer.updateProperties(this._freeHighlightId, {
-        path: {
-          d: this._freeHighlight.toSVGPath(),
-        },
-      });
-    }
-  }
-
-  static #endHighlight(parent, event) {
-    if (!this._freeHighlight.isEmpty()) {
-      parent.createAndAddNewEditor(event, false, {
-        highlightId: this._freeHighlightId,
-        highlightOutlines: this._freeHighlight.getOutlines(),
-        clipPathId: this._freeHighlightClipId,
-        methodOfCreation: "main_toolbar",
-      });
-    } else {
-      parent.drawLayer.remove(this._freeHighlightId);
-    }
-    this._freeHighlightId = -1;
-    this._freeHighlight = null;
-    this._freeHighlightClipId = "";
-  }
+  // static #endHighlight(parent, event) {
+  //   if (!this._freeHighlight.isEmpty()) {
+  //     parent.createAndAddNewEditor(event, false, {
+  //       highlightId: this._freeHighlightId,
+  //       highlightOutlines: this._freeHighlight.getOutlines(),
+  //       clipPathId: this._freeHighlightClipId,
+  //       methodOfCreation: "main_toolbar",
+  //     });
+  //   } else {
+  //     parent.drawLayer.remove(this._freeHighlightId);
+  //   }
+  //   this._freeHighlightId = -1;
+  //   this._freeHighlight = null;
+  //   this._freeHighlightClipId = "";
+  // }
 
   /** @inheritdoc */
   static async deserialize(data, parent, uiManager) {

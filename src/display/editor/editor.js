@@ -1088,10 +1088,10 @@ class AnnotationEditor {
         await this._editToolbar.addButton(name, tool);
       }
     }
-    if (!this.hasComment) {
-      this._editToolbar.addButton("comment", this.addCommentButton());
-    }
-    this._editToolbar.addButton("delete");
+    // if (!this.hasComment) {
+    //   this._editToolbar.addButton("comment", this.addCommentButton());
+    // }
+    // this._editToolbar.addButton("delete");
 
     return this._editToolbar;
   }
@@ -2146,7 +2146,7 @@ class AnnotationEditor {
   /**
    * Select this editor.
    */
-  select() {
+  select(showHighlightToolbar = true) {
     if (this.isSelected && this._editToolbar) {
       this._editToolbar.show();
       return;
@@ -2154,7 +2154,7 @@ class AnnotationEditor {
     this.isSelected = true;
     this.makeResizable();
     this.div?.classList.add("selectedEditor");
-    if (!this._editToolbar) {
+    if (!this._editToolbar && showHighlightToolbar) {
       this.addEditToolbar().then(() => {
         if (this.div?.classList.contains("selectedEditor")) {
           // The editor can have been unselected while we were waiting for the

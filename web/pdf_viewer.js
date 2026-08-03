@@ -155,6 +155,8 @@ function isValidAnnotationEditorMode(mode) {
  *   text that look like URLs. The default value is `true`.
  * @property {number} [minDurationToUpdateCanvas] - Minimum duration to wait
  *   before updating the canvas. The default value is `500`.
+ * @property {boolean} [showHighlightToolbar] - When enabled highlight toolbar will
+ * show up. The default value is `true`
  */
 
 class PDFPageViewBuffer {
@@ -256,6 +258,8 @@ class PDFViewer {
   #enableNewAltTextWhenAddingImage = false;
 
   #enableAutoLinking = true;
+
+  #showHighlightToolbar = null;
 
   #abortSignal = null;
 
@@ -378,6 +382,7 @@ class PDFViewer {
     this.#supportsPinchToZoom = options.supportsPinchToZoom !== false;
     this.#enableAutoLinking = options.enableAutoLinking !== false;
     this.#minDurationToUpdateCanvas = options.minDurationToUpdateCanvas ?? 500;
+    this.#showHighlightToolbar = options.showHighlightToolbar === true;
 
     this.defaultRenderingQueue = !options.renderingQueue;
     if (
@@ -1026,11 +1031,13 @@ class PDFViewer {
               this.#enableNewAltTextWhenAddingImage,
               this.#mlManager,
               this.#editorUndoBar,
-              this.#supportsPinchToZoom
+              this.#supportsPinchToZoom,
+              this.#showHighlightToolbar
             );
             eventBus.dispatch("annotationeditoruimanager", {
               source: this,
               uiManager: this.#annotationEditorUIManager,
+              message: "neka poruka"
             });
             if (mode !== AnnotationEditorType.NONE) {
               this.#preloadEditingData(mode);

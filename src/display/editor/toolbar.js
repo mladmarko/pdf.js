@@ -128,24 +128,25 @@ class EditorToolbar {
     this.#comment?.shown();
   }
 
-  addDeleteButton() {
-    const { editorType, _uiManager } = this.#editor;
-
-    const button = document.createElement("button");
-    button.classList.add("basic", "deleteButton");
-    button.tabIndex = 0;
-    button.setAttribute("data-l10n-id", EditorToolbar.#l10nRemove[editorType]);
-    if (this.#addListenersToElement(button)) {
-      button.addEventListener(
-        "click",
-        e => {
-          _uiManager.delete();
-        },
-        { signal: _uiManager._signal }
-      );
-    }
-    this.#buttons.append(button);
-  }
+  // @Cluing Not used anymore
+  // addDeleteButton() {
+  //   const { editorType, _uiManager } = this.#editor;
+  //
+  //   const button = document.createElement("button");
+  //   button.classList.add("basic", "deleteButton");
+  //   button.tabIndex = 0;
+  //   button.setAttribute("data-l10n-id", EditorToolbar.#l10nRemove[editorType]);
+  //   if (this.#addListenersToElement(button)) {
+  //     button.addEventListener(
+  //       "click",
+  //       e => {
+  //         _uiManager.delete();
+  //       },
+  //       { signal: _uiManager._signal }
+  //     );
+  //   }
+  //   this.#buttons.append(button);
+  // }
 
   get #divider() {
     const divider = document.createElement("div");
@@ -187,7 +188,7 @@ class EditorToolbar {
     this.#colorPicker = colorPicker;
     const button = colorPicker.renderButton();
     this.#addListenersToElement(button);
-    this.#buttons.append(button, this.#divider);
+    this.#buttons.append(button);
   }
 
   async addEditSignatureButton(signatureManager) {
@@ -226,7 +227,8 @@ class EditorToolbar {
         }
         break;
       case "delete":
-        this.addDeleteButton();
+        // @Cluing Removing delete button from toolbar
+        // this.addDeleteButton();
         break;
       case "comment":
         if (tool) {

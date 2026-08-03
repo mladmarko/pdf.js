@@ -2059,7 +2059,7 @@ class PDFWorker {
       // Check if URLs have the same origin. For non-HTTP based URLs, returns
       // false.
       this._isSameOrigin = (baseUrl, otherUrl) => {
-        const base = URL.parse(baseUrl);
+        const base = new URL(baseUrl);
         if (!base?.origin || base.origin === "null") {
           return false; // non-HTTP url
         }

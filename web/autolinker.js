@@ -154,7 +154,10 @@ class Autolinker {
       ) {
         raw = url;
       } else if (emailDomain) {
-        const hostname = URL.parse(`http://${emailDomain}`)?.hostname;
+        let hostname;
+        try {
+          hostname = new URL(`http://${emailDomain}`)?.hostname;
+        } catch {}
         if (!hostname) {
           continue;
         }
